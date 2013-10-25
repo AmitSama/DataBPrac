@@ -1,7 +1,9 @@
 #include <cstdint>
 #include "Types.hpp"
+//#include "NewOrder.cpp"
 
 const int32_t warehouses=5;
+int32_t random(){ return rand();}
 
 int32_t urand(int32_t min,int32_t max) {
    return (random()%(max-min+1))+min;
@@ -36,5 +38,24 @@ void newOrderRandom(Timestamp now,int32_t w_id) {
       qty[i]=urand(1,10);
    }
 
-   //newOrder(w_id,d_id,c_id,ol_cnt,supware,itemid,qty,now);
+   newOrder(w_id,d_id,c_id,ol_cnt,supware,itemid,qty,now);
 }
+
+int main(){
+
+    customer_loader();
+    stock_loader();
+    orderline_loader();
+    order_loader();
+    warehouse_loader();
+    district_loader();
+    history_loader();
+    neworder_loader();
+    item_loader();
+    Timestamp now = time(NULL);
+    int32_t w_id = (int32_t)random();
+    newOrderRandom(now,w_id);
+    return 0;
+}
+
+

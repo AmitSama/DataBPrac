@@ -1,5 +1,5 @@
 #include "Types.hpp"
-#include "Types.cpp"
+//#include "Types.cpp"
 #include <vector>
 #include <map>
 #include <tuple>
@@ -17,6 +17,7 @@ struct t_warehouse {
     Numeric <4,4>w_tax;
     Numeric <12,2>w_ytd;
 };
+//primary key (w_id)
 std::map<Integer, uint64_t> pkey_warehouse;
 vector <t_warehouse> warehouse;
 
@@ -34,6 +35,7 @@ struct t_district {
     Numeric <12,2> d_ytd;
     Integer d_next_o_id;
 };
+//primary key (d_w_id,d_id)
 std::map <tuple<Integer,Integer>,uint64_t> pkey_district;
 vector <t_district> district;
 
@@ -60,13 +62,12 @@ struct t_customer {
     Numeric<4,0> c_delivery_cnt;
     Varchar<500> c_data;
 };
+//primary key (c_w_id,c_d_id,c_id)
 std::map<tuple<Integer,Integer,Integer>,uint64_t> pkey_customer;
 vector <t_customer> customer;
 
-
-std::map<tuple<Integer,Integer,Integer,Varchar<16>,Varchar<16>>,uint64_t> customer_wdl;
 //create index customer_wdl on customer(c_w_id,c_d_id,c_last,c_first); // to be done
-
+std::map<uint64_t,uint64_t> customer_wdl;
 
 struct t_history {
     Integer h_c_id;
@@ -84,9 +85,11 @@ vector <t_history> history;
 struct t_neworder {
     Integer no_o_id;
     Integer no_d_id;
-    Integer no_w_id;
-    std::map<tuple<Integer,Integer,Integer>,uint64_t> p_key;
+    Integer no_w_id;    
 };
+
+//primary key (no_w_id,no_d_id,no_o_id)
+std::map<tuple<Integer,Integer,Integer>,uint64_t> pkey_neworder;
 vector<t_neworder> neworder;
 
 struct t_order {
@@ -94,15 +97,18 @@ struct t_order {
     Integer o_d_id;
     Integer o_w_id;
     Integer o_c_id;
-    uint64_t o_entry_d;
+    Timestamp o_entry_d;
     Integer o_carrier_id;
     Numeric <2,0> o_ol_cnt;
-    Numeric <1,0> o_all_local;
-    std::map<tuple<Integer,Integer,Integer>,uint64_t> p_key;
+    Numeric <1,0> o_all_local;    
 };
-vector<t_order> order;
 
+//primary key (o_w_id,o_d_id,o_id)
+std::map<tuple<Integer,Integer,Integer>,uint64_t> pkey_order;
+vector<t_order> order;
 //create index order_wdc on "order"(o_w_id,o_d_id,o_c_id,o_id);
+std::map<uint64_t,uint64_t> order_wdc;
+
 
 
 struct t_orderline {
@@ -112,12 +118,13 @@ struct t_orderline {
     Integer ol_number;
     Integer ol_i_id;
     Integer ol_supply_w_id;
-    uint64_t ol_delivery_d;
+    Timestamp ol_delivery_d;
     Numeric<2,0> ol_quantity;
     Numeric<6,2> ol_amount;
     Char<24> ol_dist_info;
-    std::map<tuple<Integer,Integer,Integer,Integer>, uint64_t>p_key;
 };
+//primary key (ol_w_id,ol_d_id,ol_o_id,ol_number)
+std::map<tuple<Integer,Integer,Integer,Integer>, uint64_t> pkey_orderline;
 vector<t_orderline> orderline;
 
 
@@ -127,8 +134,9 @@ struct t_item {
     Varchar<24> i_name;
     Numeric<5,2>i_price;
     Varchar<50> i_data;
-    std::map<Integer,uint64_t> p_key;
 };
+//primary key (i_id)
+std::map<Integer,uint64_t> pkey_item;
 vector<t_item> item;
 
 
@@ -150,6 +158,9 @@ struct t_stock {
     Numeric<4,0> s_order_cnt;
     Numeric<4,0> s_remote_cnt;
     Varchar<50> s_data;
-    std::map<tuple<Integer,Integer>,uint64_t>p_key;
 };
+
+//primary key (s_w_id,s_i_id)std::map<tuple<Integer,Integer>,uint64_t> pkey_stock;
+std::map<tuple<Integer,Integer>,uint64_t>pkey_stock;
 vector<t_stock> stock;
+
